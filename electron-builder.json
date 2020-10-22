@@ -1,0 +1,20 @@
+{
+  "appId": "com.electron.angular-electron",
+  "productName": "angular-electron",
+  "directories": {
+    "output": "release/"
+  },
+  "files": ["electron/dist", "src/dist"],
+  "win": {
+    "icon": "src/dist/assets/icons/favicon.ico",
+    "target": ["portable"]
+  },
+  "mac": {
+    "icon": "src/dist/assets/icons/favicon.ico",
+    "target": ["dmg"]
+  },
+  "linux": {
+    "icon": "src/dist/assets/icons/favicon.256x256.png",
+    "target": ["AppImage"]
+  }
+}

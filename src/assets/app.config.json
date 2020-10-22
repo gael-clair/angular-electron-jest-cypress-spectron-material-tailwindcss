@@ -1,0 +1,15 @@
+{
+  "database": {
+    "name": "appdata"
+  },
+  "logging": {
+    "timestampFormat": "D-M-YY HH:mm:ss.SSS",
+    "colorScheme": {
+      "DEBUG": "teal",
+      "INFO": "blue",
+      "WARN": "blueviolet",
+      "ERROR": "red"
+    },
+    "levels": ["silly", "verbose", "debug", "info", "warn", "error", "silent"]
+  }
+}

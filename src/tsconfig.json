@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "@app/core/*": ["src/app/core/*"],
+      "@app/core": ["src/app/core"],
+      "@app/shared/*": ["src/app/shared/*"],
+      "@app/shared": ["src/app/shared"],
+      "@app/features/*": ["src/app/features/*"],
+      "@app/features": ["src/app/features"],
+      "@app/adaptive/*": ["src/app/adaptive/*"],
+      "@app/adaptive": ["src/app/adaptive"],
+      "@app/env": ["src/environments/environment"],
+      "@app/types": ["src/app/types"],
+      "@test/utils": ["src/test.utils.ts"]
+    }
+  },
+  "files": ["../typings.d.ts"]
+}

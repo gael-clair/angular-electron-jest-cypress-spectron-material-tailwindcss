@@ -1,0 +1,7 @@
+/.idea
+/.nyc_output
+/coverage
+/electron/dist
+/reports
+/src/dist
+/src/styles.css

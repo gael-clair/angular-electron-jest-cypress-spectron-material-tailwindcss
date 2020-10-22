@@ -1,0 +1,23 @@
+{
+  "extends": ["stylelint-prettier/recommended", "stylelint-config-recommended", "stylelint-config-prettier"],
+  "plugins": ["stylelint-no-unsupported-browser-features", "stylelint-prettier"],
+  "rules": {
+    "prettier/prettier": true,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["tailwind", "layer"]
+      }
+    ],
+    "plugin/no-unsupported-browser-features": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
+    "no-empty-source": null
+  },
+  "junit-formatter": {
+    "outputPath": "reports/style.xml"
+  }
+}

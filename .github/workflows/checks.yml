@@ -1,0 +1,114 @@
+name: 'checks'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  checks:
+    name: checks (build, lint, test)
+    runs-on: ubuntu-latest
+    env:
+      COVERAGE_FOLDER: coverage
+      REPORTS_FOLDER: reports
+      NODE_VERSION: '12.x'
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Check cache of yarn dependencies
+        uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build:ci
+
+      - name: Lint code
+        run: yarn lint:ci
+
+      - name: Lint style
+        run: yarn lint:style:ci
+
+      - name: Run angular unit tests with coverage
+        run: yarn ng:test:ci
+
+      - name: Coveralls angular unit tests
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN  }}
+          flag-name: angular-unit-tests
+          path-to-lcov: ${{ env.COVERAGE_FOLDER }}/angular/ut/lcov.info
+          parallel: true
+
+      - name: Run angular integration tests with coverage
+        run: yarn ng:e2e:ci
+
+      - name: Coveralls angular integration tests
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN  }}
+          flag-name: angular-integration-tests
+          path-to-lcov: ${{ env.COVERAGE_FOLDER }}/angular/ti/lcov.info
+          parallel: true
+
+      - name: Run electron unit tests with coverage
+        run: yarn electron:test:ci
+
+      - name: Coveralls electron unit tests
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN  }}
+          flag-name: electron-unit-tests
+          path-to-lcov: ${{ env.COVERAGE_FOLDER }}/electron/ut/lcov.info
+          parallel: true
+
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
+
+      - name: Run end-to-end tests
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: yarn e2e:ci
+
+      - name: Build release
+        run: yarn build
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage
+          path: ${{ env.COVERAGE_FOLDER }}
+
+      - name: Upload tests reports
+        uses: actions/upload-artifact@v1
+        with:
+          name: tests
+          path: ${{ env.REPORTS_FOLDER }}

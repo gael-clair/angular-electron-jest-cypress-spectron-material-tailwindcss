@@ -1,0 +1,9 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/angular/spec"
+  },
+  "files": ["polyfills.ts", "../typings.d.ts"],
+  "include": ["**/*.spec.ts", "**/*.d.ts", "test.utils.ts"]
+}

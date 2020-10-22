@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/e2e"
+  },
+  "files": ["../typings.d.ts"],
+  "include": ["src/**/*.e2e.ts"]
+}
