@@ -10,7 +10,9 @@ log.transports.file.format = '[{d}-{m}-{y} {h}:{i}:{s}.{ms}] [{level}] {text}';
  * Base logger adding context in log message.
  */
 export class Logger {
-  constructor(private context: string) {}
+  constructor(private context: string) {
+    this.debug('Creating logger for this context.');
+  }
 
   /**
    * Logs context and data at error level.
@@ -62,6 +64,7 @@ export class IpcMainLogger extends Logger {
 
     // checks if handler already added before adding it
     if (!ipcMain.eventNames().includes(EVENTS.LOGGER.IN.LOG_MESSAGE)) {
+      this.debug('Registering handler on IpcMain for log message.');
       // add handler
       ipcMain.on(EVENTS.LOGGER.IN.LOG_MESSAGE, (event: IpcMainEvent, level: LogLevel, ...data: any[]): void => {
         this[level](...data);
