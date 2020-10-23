@@ -1209,15 +1209,15 @@ $ yarn add -D electron-builder
   },
   "files": ["electron/dist", "src/dist"],
   "win": {
-    "icon": "src/dist/favicon.ico",
+    "icon": "src/dist/assets/icons/favicon.ico",
     "target": ["portable"]
   },
   "mac": {
-    "icon": "src/dist/favicon.ico",
+    "icon": "src/dist/assets/icons/favicon.ico",
     "target": ["dmg"]
   },
   "linux": {
-    "icon": "src/dist/favicon.ico",
+    "icon": "src/dist/assets/icons/favicon.256x256.png",
     "target": ["AppImage"]
   }
 }
