@@ -1,8 +1,8 @@
 {
-  "name": "angular-electron",
+  "name": "angular-electron-jest-cypress-spectron-material-tailwindcss",
   "version": "0.0.0",
-  "description": "Application Angular dans Electron",
-  "homepage": "https://github.com/gael-clair/angular-electron",
+  "description": "Angular application in Electron",
+  "homepage": "angular-electron-jest-cypress-spectron-material-tailwindcss",
   "author": {
     "email": "gael.clair@gmail.com",
     "name": "Gaël Clair"
