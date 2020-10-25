@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { DatabaseItem } from '@app/core/models';
 import * as pai from 'pouchdb-adapter-indexeddb';
-import { addRxPlugin, createRxDatabase, RxDatabase } from 'rxdb';
+import { addRxPlugin, createRxDatabase, RxCollection, RxCollectionCreator, RxDatabase, RxJsonSchema } from 'rxdb';
+import { BehaviorSubject } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { AppConfigService } from './app-config.service';
 import { DatabaseService } from './database.service';
 
@@ -11,9 +14,17 @@ import { DatabaseService } from './database.service';
 @Injectable()
 export class BrowserDatabaseService extends DatabaseService {
   private database: RxDatabase;
+  private readonly loaded = new BehaviorSubject<boolean>(false);
 
   constructor(private appConfigService: AppConfigService) {
     super();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  get isLoaded$(): Promise<boolean> {
+    return this.loaded.pipe(first((loaded) => loaded === true)).toPromise();
   }
 
   /**
@@ -25,14 +36,19 @@ export class BrowserDatabaseService extends DatabaseService {
       name: this.appConfigService.database.name || 'appdata',
       adapter: 'indexeddb',
     });
+    this.loaded.next(true);
   }
 
   /**
    * @inheritDoc
    */
-  async createCollection(collectionName: string, schema: any, options?: any): Promise<any> {
+  async createCollection<T extends DatabaseItem>(
+    collectionName: string,
+    schema: RxJsonSchema<T>,
+    options?: Partial<RxCollectionCreator>,
+  ): Promise<RxCollection> {
     if (!this.database[collectionName]) {
-      options = Object.assign(
+      const opt = Object.assign(
         {},
         {
           name: collectionName,
@@ -40,42 +56,42 @@ export class BrowserDatabaseService extends DatabaseService {
         },
         options || {},
       );
-      await this.database.collection(options);
+      return await this.database.collection(opt);
     }
   }
 
   /**
    * @inheritDoc
    */
-  async create(collectionName: string, item: any): Promise<any> {
+  async create<T extends DatabaseItem>(collectionName: string, item: T): Promise<T> {
     return (await this.database[collectionName].insert(item)).toJSON();
   }
 
   /**
    * @inheritDoc
    */
-  async read(collectionName: string, id: any): Promise<any> {
+  async read<T extends DatabaseItem>(collectionName: string, id: string): Promise<T> {
     return (await this.database[collectionName].findOne(id).exec()).toJSON();
   }
 
   /**
    * @inheritDoc
    */
-  async update(collectionName: string, id: any, updates: any): Promise<any> {
+  async update<T extends DatabaseItem>(collectionName: string, id: string, updates: any): Promise<T> {
     return (await this.database[collectionName].findOne(id).update(updates)).toJSON();
   }
 
   /**
    * @inheritDoc
    */
-  async delete(collectionName: string, id: any): Promise<any> {
+  async delete<T extends DatabaseItem>(collectionName: string, id: string): Promise<T> {
     return (await this.database[collectionName].findOne(id).remove()).toJSON();
   }
 
   /**
    * @inheritDoc
    */
-  async list(collectionName: string): Promise<any[]> {
+  async list<T extends DatabaseItem>(collectionName: string): Promise<T[]> {
     return (await this.database[collectionName].find().exec()).map((i) => i.toJSON());
   }
 }

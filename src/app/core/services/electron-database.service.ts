@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { RxCollection, RxCollectionCreator, RxJsonSchema } from 'rxdb';
+import { DatabaseItem } from '../models';
 import { DatabaseService } from './database.service';
 
 /**
@@ -17,42 +19,53 @@ export class ElectronDatabaseService extends DatabaseService {
   /**
    * @inheritDoc
    */
-  async createCollection(collectionName: string, schema: any, options?: any): Promise<void> {
+  get isLoaded$(): Promise<boolean> {
+    return Promise.resolve(true);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  async createCollection<T extends DatabaseItem>(
+    collectionName: string,
+    schema: RxJsonSchema<T>,
+    options?: Partial<RxCollectionCreator>,
+  ): Promise<RxCollection> {
     return await this.eventsApi.invoke(this.events.IN.CREATE_COLLECTION, collectionName, schema, options);
   }
 
   /**
    * @inheritDoc
    */
-  async create(collectionName: string, item: any): Promise<any> {
+  async create<T extends DatabaseItem>(collectionName: string, item: T): Promise<T> {
     return await this.eventsApi.invoke(this.events.IN.CREATE_ITEM, collectionName, item);
   }
 
   /**
    * @inheritDoc
    */
-  async read(collectionName: string, id: any): Promise<any> {
+  async read<T extends DatabaseItem>(collectionName: string, id: string): Promise<T> {
     return await this.eventsApi.invoke(this.events.IN.READ_ITEM, collectionName, id);
   }
 
   /**
    * @inheritDoc
    */
-  async update(collectionName: string, id: any, updates: any): Promise<any> {
+  async update<T extends DatabaseItem>(collectionName: string, id: string, updates: any): Promise<T> {
     return await this.eventsApi.invoke(this.events.IN.UPDATE_ITEM, collectionName, id, updates);
   }
 
   /**
    * @inheritDoc
    */
-  async delete(collectionName: string, id: any): Promise<any> {
+  async delete<T extends DatabaseItem>(collectionName: string, id: string): Promise<T> {
     return await this.eventsApi.invoke(this.events.IN.DELETE_ITEM, collectionName, id);
   }
 
   /**
    * @inheritDoc
    */
-  async list(collectionName: string): Promise<any[]> {
+  async list<T extends DatabaseItem>(collectionName: string): Promise<T[]> {
     return await this.eventsApi.invoke(this.events.IN.LIST_ITEMS, collectionName);
   }
 }

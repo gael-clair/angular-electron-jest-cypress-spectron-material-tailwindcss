@@ -10,8 +10,8 @@
       "@app/shared": ["src/app/shared"],
       "@app/features/*": ["src/app/features/*"],
       "@app/features": ["src/app/features"],
-      "@app/adaptive/*": ["src/app/adaptive/*"],
-      "@app/adaptive": ["src/app/adaptive"],
+      "@app/data/*": ["src/app/data/*"],
+      "@app/data": ["src/app/data"],
       "@app/env": ["src/environments/environment"],
       "@app/types": ["src/app/types"],
       "@test/utils": ["src/test.utils.ts"]

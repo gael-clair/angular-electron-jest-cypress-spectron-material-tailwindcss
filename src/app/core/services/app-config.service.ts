@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@app/env';
 import { Environment } from '@app/types';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { AppConfig, DatabaseConfig, LoggingConfig } from '../models';
 
 /**
@@ -73,5 +74,12 @@ export class AppConfigService {
    */
   get loaded$(): Observable<boolean> {
     return this.loaded.asObservable();
+  }
+
+  /**
+   * Promise resolved when configuration is loaded.
+   */
+  get isLoaded$(): Promise<boolean> {
+    return this.loaded.pipe(first((loaded) => loaded === true)).toPromise();
   }
 }
